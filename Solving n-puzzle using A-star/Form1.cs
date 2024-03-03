@@ -345,7 +345,6 @@ namespace Solving_n_puzzle_using_A_star
                 }
 
                 
-
             }
         }
         private void GetLenght()
