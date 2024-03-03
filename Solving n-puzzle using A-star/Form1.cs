@@ -137,6 +137,7 @@ namespace Solving_n_puzzle_using_A_star
                 else
                 {
                     MessageBox.Show("Puzzle is not solvable");
+                    button2.Enabled = true;
                 }
             }
 
@@ -145,13 +146,55 @@ namespace Solving_n_puzzle_using_A_star
 
         private void initialState_KeyDown(object sender, KeyEventArgs e)
         {
+            bool isThereSame = false;
+            List<int> linearList = new List<int>();
             if (e.KeyData == Keys.Enter)
             {
                 GetInitialState();
                 GetLenght();
-                textBox2.Enabled = true;
-                textBox1.Enabled = false;
+                if(Math.Sqrt(lenght)%1 == 0)
+                {
+                    for(int i = 0; i<Math.Sqrt(lenght); i++)
+                    {
+                        for (int j = 0; j < Math.Sqrt(lenght); j++)
+                        {
+                            linearList.Add(initialState[i, j]);
+                            
+                        }
+                    }
+                    while(linearList.Count != 0)
+                    {
+                        int first = linearList[0];
+                        linearList.RemoveAt(0);
+                        for(int j = 0; j < linearList.Count; j++)
+                        {
+                            if (linearList[j] == first)
+                            {
+                                MessageBox.Show("The same value can't be used in the puzzle!!");
+                                isThereSame = true;
+                                break;
+                            }
+                           
+                        }
+                        if (isThereSame)
+                        {
+                            break;
+                        }
+                    }
+                    if (!isThereSame)
+                    {
+                        textBox2.Enabled = true;
+                        textBox1.Enabled = false;
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("Puzzle is not a perfect square.");
+                }
+
             }
+            
         }
 
         private void goalState_KeyDown(object sender, KeyEventArgs e)
