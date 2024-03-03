@@ -26,8 +26,7 @@ namespace Solving_n_puzzle_using_A_star
             {
                 for (int j = i + 1; j < lenght; j++)
                 {
-                    // count pairs(arr[i], arr[j]) such that
-                    // i < j but arr[i] > arr[j]
+                    
                     if (arr[j] != 0 && arr[i] != 0
                         && arr[i] > arr[j])
                         inv_count++;
@@ -36,10 +35,9 @@ namespace Solving_n_puzzle_using_A_star
             return inv_count;
         }
 
-        // find Position of blank from bottom
         static int findXPosition(int[,] puzzle)
         {
-            // start from bottom-right corner of matrix
+           
             for (int i = Convert.ToInt32(Math.Sqrt(lenght)) - 1; i >= 0; i--)
             {
                 for (int j = Convert.ToInt32(Math.Sqrt(lenght)) - 1; j >= 0; j--)
@@ -51,8 +49,7 @@ namespace Solving_n_puzzle_using_A_star
             return -1;
         }
 
-        // This function returns true if given
-        // instance of N*N - 1 puzzle is solvable
+        
         static bool isSolvable(int[,] puzzle)
         {
             int[] arr = new int[lenght];
@@ -65,14 +62,12 @@ namespace Solving_n_puzzle_using_A_star
                 }
             }
 
-            // Count inversions in given puzzle
+           
             int invCount = getInvCount(arr);
 
-            // If grid is odd, return true if inversion
-            // count is even.
             if (Convert.ToInt32(Math.Sqrt(lenght)) % 2 == 1)
                 return invCount % 2 == 0;
-            else // grid is even
+            else 
             {
                 int pos = findXPosition(puzzle);
                 if (pos % 2 == 1)
