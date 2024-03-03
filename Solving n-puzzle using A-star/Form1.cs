@@ -9,6 +9,7 @@ namespace Solving_n_puzzle_using_A_star
         int[,]? goalState;
         static int lenght;
         MyLabel? myLabel;
+        MyProgressBar? myProgressBar;
         public Form1()
         {
             InitializeComponent();
@@ -81,19 +82,24 @@ namespace Solving_n_puzzle_using_A_star
         private void solve_Click(object sender, EventArgs e)
         {
             button1.Enabled = false;
-
+            
             if (initialState != null && goalState != null)
             {
                 if (isSolvable(initialState) && isSolvable(goalState))
                 {
+                  
                     myLabel = new MyLabel(
                     location: new Point(progressBar1.Location.X, progressBar1.Location.Y - 20),
-                    text: "Progressing...", progressBar: progressBar1);
+                    text: "Steps are calculating...", progressBar: progressBar1);
                     this.Controls.Add(myLabel);
+                    
+                    Application.DoEvents();
 
-
-                    PuzzleSolver solver = new PuzzleSolver(Convert.ToInt32(Math.Sqrt(lenght)), goalState);
+                    PuzzleSolver solver = new PuzzleSolver(Convert.ToInt32(Math.Sqrt(lenght)),goalState);
                     var solution = solver.Solve(initialState);
+
+                    myLabel.Text = "Printing is on progress...";
+
                     DataGridViewCell? parentCell = null;
                     dataGridView1.ColumnCount = (int)Math.Sqrt(lenght);
 
@@ -356,6 +362,7 @@ namespace Solving_n_puzzle_using_A_star
             progressBar1.Value = 0;
             textBox1.Enabled = true;
             this.Controls.Remove(myLabel);
+            
         }
     }
 }

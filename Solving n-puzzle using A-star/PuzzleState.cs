@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Solving_n_puzzle_using_A_star
 {
@@ -29,12 +30,13 @@ namespace Solving_n_puzzle_using_A_star
         int[,] goalState;
         int[,] moves;
         int rowsOrColumns;
-        
+
         public PuzzleSolver(int rowsOrColumns, int[,] goalState)
         {
             this.rowsOrColumns = rowsOrColumns;
             this.moves = new int[,] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
             this.goalState = goalState;
+            
             //MessageBox.Show("Puzzle solver instance created");
         }
 
@@ -45,7 +47,7 @@ namespace Solving_n_puzzle_using_A_star
             var currentState = new PuzzleState(initialState,0,ManhattanDistance(initialState));
             openList.Add(currentState);
 
-            while(openList.Count > 0)
+            while (openList.Count > 0)
             {
                 openList.Sort((a, b) => a.F.CompareTo(b.F));
                 currentState = openList[0];
@@ -56,6 +58,7 @@ namespace Solving_n_puzzle_using_A_star
                 if(IsGoalState(currentState))
                 {
                     return TracePath(currentState);
+                    
                 }
 
                 var emptyTile = FindEmptyTile(currentState);
