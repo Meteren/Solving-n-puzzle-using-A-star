@@ -70,7 +70,7 @@ namespace Solving_n_puzzle_using_A_star
                         newBoard[newEmptyTile.Item1, newEmptyTile.Item2] = 0;
                         var newState = new PuzzleState(newBoard, currentState.G + 1, ManhattanDistance(newBoard));
                         newState.Parent = currentState;
-
+                        
                         if (!closedList.Contains(StateToString(newBoard)))
                         {
                             openList.Add(newState);

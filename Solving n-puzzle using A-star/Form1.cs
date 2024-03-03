@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 
 namespace Solving_n_puzzle_using_A_star
@@ -146,6 +147,8 @@ namespace Solving_n_puzzle_using_A_star
 
         private void initialState_KeyDown(object sender, KeyEventArgs e)
         {
+            bool isBiggerThanLenght = false;
+            bool isNull = false;
             bool isThereSame = false;
             List<int> linearList = new List<int>();
             if (e.KeyData == Keys.Enter)
@@ -158,7 +161,16 @@ namespace Solving_n_puzzle_using_A_star
                     {
                         for (int j = 0; j < Math.Sqrt(lenght); j++)
                         {
-                            linearList.Add(initialState[i, j]);
+                            try
+                            {
+                                linearList.Add(initialState[i, j]);
+                            }
+                            catch(NullReferenceException)
+                            {
+                                MessageBox.Show("Initial puzzle state can't be null!!");
+                                isNull = true;
+                                break;
+                            }                        
                             
                         }
                     }
@@ -174,14 +186,24 @@ namespace Solving_n_puzzle_using_A_star
                                 isThereSame = true;
                                 break;
                             }
+                            if(first >= lenght)
+                            {
+                                MessageBox.Show("Values can't be equal or bigger than lenght!!");
+                                isBiggerThanLenght = true;
+                                break;
+                            }
                            
                         }
                         if (isThereSame)
                         {
                             break;
                         }
+                        if (isBiggerThanLenght)
+                        {
+                            break;
+                        }
                     }
-                    if (!isThereSame)
+                    if (!isThereSame && !isNull && !isBiggerThanLenght)
                     {
                         textBox2.Enabled = true;
                         textBox1.Enabled = false;
@@ -199,12 +221,79 @@ namespace Solving_n_puzzle_using_A_star
 
         private void goalState_KeyDown(object sender, KeyEventArgs e)
         {
+            bool isBiggerThanLenght = false;
+            bool isNull = false;
+            bool isThereSame = false;
+            List<int> linearList = new List<int>();
             if (e.KeyData == Keys.Enter)
             {
                 GetGoalState();
-                textBox2.Enabled = false;
-                button1.Enabled = true;
+                if (textBox2.Text.Length != lenght)
+                {
+                    if (Math.Sqrt((textBox2.Text.Split("-")).Length) % 1 == 0)
+                    {
+                        for (int i = 0; i < Math.Sqrt(lenght); i++)
+                        {
+                            for (int j = 0; j < Math.Sqrt(lenght); j++)
+                            {
+                                try
+                                {
+                                    linearList.Add(goalState[i, j]);
+                                }
+                                catch (NullReferenceException)
+                                {
+                                    MessageBox.Show("Goal puzzle state can't be null!!");
+                                    isNull = true;
+                                    break;
+                                }
 
+                            }
+                        }
+                        while (linearList.Count != 0)
+                        {
+                            int first = linearList[0];
+                            linearList.RemoveAt(0);
+                            for (int j = 0; j < linearList.Count; j++)
+                            {
+                                if (linearList[j] == first)
+                                {
+                                    MessageBox.Show("The same value can't be used in the puzzle!!");
+                                    isThereSame = true;
+                                    break;
+                                }
+                                if (first >= lenght)
+                                {
+                                    MessageBox.Show("Values can't be equal or bigger than lenght!!");
+                                    isBiggerThanLenght = true;
+                                    break;
+                                }
+                            }
+                            if (isThereSame)
+                            {
+                                break;
+                            }
+                            if (isBiggerThanLenght)
+                            {
+                                break;
+                            }
+                        }
+                        if (!isThereSame && !isNull && !isBiggerThanLenght)
+                        {
+                            textBox2.Enabled = false;
+                            button1.Enabled = true;
+                        }
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Puzzle is not a perfect square.");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Puzzle sizes are not matching!!");
+                }
+                
             }
         }
 
@@ -212,7 +301,7 @@ namespace Solving_n_puzzle_using_A_star
         {
 
             int stp = 0;
-            if (textBox1.Text != null)
+            if (textBox1.Text != "")
             {
 
                 string[] s = (textBox1.Text.ToString()).Split("-");
@@ -235,30 +324,22 @@ namespace Solving_n_puzzle_using_A_star
         private void GetGoalState()
         {
             int stp = 0;
-            if (textBox2.Text != null)
+            if (textBox2.Text != "")
             {
                 string[] s = (textBox2.Text.ToString()).Split("-");
                 int size = (int)Math.Sqrt(s.Length);
                 goalState = new int[size, size];
-                if (size != (int)Math.Sqrt(lenght))
+                
+                for (int i = 0; i < size; i++)
                 {
-                    throw new Exception("Please enter equal sized puzzles");
-                }
-                else
-                {
-
-                    for (int i = 0; i < size; i++)
+                    for (int j = 0; j < size; j++)
                     {
-                        for (int j = 0; j < size; j++)
-                        {
-
-                            goalState![i, j] = Convert.ToInt32(s[stp]);
-                            stp++;
-
-                        }
+                        goalState![i, j] = Convert.ToInt32(s[stp]);
+                        stp++;
                     }
-
                 }
+
+                
 
             }
         }
