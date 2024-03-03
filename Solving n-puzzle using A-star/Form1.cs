@@ -9,7 +9,6 @@ namespace Solving_n_puzzle_using_A_star
         int[,]? goalState;
         static int lenght;
         MyLabel? myLabel;
-        MyProgressBar? myProgressBar;
         public Form1()
         {
             InitializeComponent();
