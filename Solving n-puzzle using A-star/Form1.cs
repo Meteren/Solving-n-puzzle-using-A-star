@@ -158,9 +158,11 @@ namespace Solving_n_puzzle_using_A_star
             List<int> linearList = new List<int>();
             if (e.KeyData == Keys.Enter)
             {
-                GetInitialState();
+                
+                GetState(textBox1, ref initialState);
                 GetLenght();
-                if(Math.Sqrt(lenght)%1 == 0)
+
+                if (Math.Sqrt(lenght)%1 == 0)
                 {
                     for(int i = 0; i<Math.Sqrt(lenght); i++)
                     {
@@ -232,7 +234,8 @@ namespace Solving_n_puzzle_using_A_star
             List<int> linearList = new List<int>();
             if (e.KeyData == Keys.Enter)
             {
-                GetGoalState();
+                GetState(textBox2, ref goalState);
+
                 if (textBox2.Text.Length != lenght)
                 {
                     if (Math.Sqrt((textBox2.Text.Split("-")).Length) % 1 == 0)
@@ -302,22 +305,20 @@ namespace Solving_n_puzzle_using_A_star
             }
         }
 
-        private void GetInitialState()
+        private void GetState(TextBox textBox, ref int[,]? state)
         {
-
             int stp = 0;
-            if (textBox1.Text != "")
+            if (textBox.Text != "")
             {
-
-                string[] s = (textBox1.Text.ToString()).Split("-");
+                string[] s = (textBox.Text.ToString()).Split("-");
                 int size = (int)Math.Sqrt(s.Length);
-                initialState = new int[size, size];
+                state = new int[size, size];
                 for (int i = 0; i < size; i++)
                 {
                     for (int j = 0; j < size; j++)
                     {
 
-                        initialState![i, j] = Convert.ToInt32(s[stp]);
+                        state![i, j] = Convert.ToInt32(s[stp]);
                         stp++;
 
                     }
@@ -325,28 +326,7 @@ namespace Solving_n_puzzle_using_A_star
 
             }
         }
-
-        private void GetGoalState()
-        {
-            int stp = 0;
-            if (textBox2.Text != "")
-            {
-                string[] s = (textBox2.Text.ToString()).Split("-");
-                int size = (int)Math.Sqrt(s.Length);
-                goalState = new int[size, size];
-                
-                for (int i = 0; i < size; i++)
-                {
-                    for (int j = 0; j < size; j++)
-                    {
-                        goalState![i, j] = Convert.ToInt32(s[stp]);
-                        stp++;
-                    }
-                }
-
-                
-            }
-        }
+ 
         private void GetLenght()
         {
             string[] s = textBox1.Text.Split("-");
