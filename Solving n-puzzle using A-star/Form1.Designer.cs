@@ -37,6 +37,7 @@
             label2 = new Label();
             progressBar1 = new ProgressBar();
             button2 = new Button();
+            label3 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -119,12 +120,22 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += Reset_Click;
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(22, 386);
+            label3.Name = "label3";
+            label3.Size = new Size(335, 20);
+            label3.TabIndex = 8;
+            label3.Text = "Press enter after entering the each state of puzzle";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(800, 423);
+            Controls.Add(label3);
             Controls.Add(button2);
             Controls.Add(progressBar1);
             Controls.Add(label2);
@@ -150,5 +161,6 @@
         private Label label2;
         private ProgressBar progressBar1;
         private Button button2;
+        private Label label3;
     }
 }

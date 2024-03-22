@@ -20,7 +20,7 @@ namespace Solving_n_puzzle_using_A_star
 
         }
 
-        static int getInvCount(int[] arr)
+        /*static int getInvCount(int[] arr)
         {
             int inv_count = 0;
             for (int i = 0; i < lenght - 1; i++)
@@ -76,75 +76,69 @@ namespace Solving_n_puzzle_using_A_star
                 else
                     return invCount % 2 == 1;
             }
-        }
+        }*/
 
         private void solve_Click(object sender, EventArgs e)
         {
             button1.Enabled = false;
-            
+
             if (initialState != null && goalState != null)
             {
-                if (isSolvable(initialState) && isSolvable(goalState))
+
+
+                myLabel = new MyLabel(
+                location: new Point(progressBar1.Location.X, progressBar1.Location.Y - 20),
+                text: "Steps are calculating...", progressBar: progressBar1);
+                this.Controls.Add(myLabel);
+
+                Application.DoEvents();
+
+                PuzzleSolver solver = new PuzzleSolver(Convert.ToInt32(Math.Sqrt(lenght)), goalState);
+                var solution = solver.Solve(initialState);
+
+                myLabel.Text = "Printing is on progress...";
+
+                DataGridViewCell? parentCell = null;
+                dataGridView1.ColumnCount = (int)Math.Sqrt(lenght);
+
+                double barLevelIncrement = 100 / solution.Count;
+
+                for (int i = 0; i < (int)Math.Sqrt(lenght); i++)
                 {
-                  
-                    myLabel = new MyLabel(
-                    location: new Point(progressBar1.Location.X, progressBar1.Location.Y - 20),
-                    text: "Steps are calculating...", progressBar: progressBar1);
-                    this.Controls.Add(myLabel);
-                    
-                    Application.DoEvents();
+                    dataGridView1.Rows.Add();
+                }
+                foreach (var step in solution)
+                {
 
-                    PuzzleSolver solver = new PuzzleSolver(Convert.ToInt32(Math.Sqrt(lenght)),goalState);
-                    var solution = solver.Solve(initialState);
-
-                    myLabel.Text = "Printing is on progress...";
-
-                    DataGridViewCell? parentCell = null;
-                    dataGridView1.ColumnCount = (int)Math.Sqrt(lenght);
-
-                    double barLevelIncrement = 100 / solution.Count;
-
-                    for (int i = 0; i < (int)Math.Sqrt(lenght); i++)
+                    for (int i = 0; i < Math.Sqrt(lenght); i++)
                     {
-                        dataGridView1.Rows.Add();
-                    }
-                    foreach (var step in solution)
-                    {
-
-                        for (int i = 0; i < Math.Sqrt(lenght); i++)
+                        for (int j = 0; j < Math.Sqrt(lenght); j++)
                         {
-                            for (int j = 0; j < Math.Sqrt(lenght); j++)
+                            dataGridView1.Rows[i].Cells[j].Value = step[i, j];
+                            if ((int)(dataGridView1.Rows[i].Cells[j].Value) == 0)
                             {
-                                dataGridView1.Rows[i].Cells[j].Value = step[i, j];
-                                if ((int)(dataGridView1.Rows[i].Cells[j].Value) == 0)
+                                if (parentCell != null)
                                 {
-                                    if (parentCell != null)
-                                    {
-                                        parentCell.Style.BackColor = Color.White;
-                                    }
-                                    dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Tomato;
-                                    parentCell = dataGridView1.Rows[i].Cells[j];
+                                    parentCell.Style.BackColor = Color.White;
                                 }
+                                dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Tomato;
+                                parentCell = dataGridView1.Rows[i].Cells[j];
                             }
                         }
-                        progressBar1.Value += (int)barLevelIncrement;
-                        if (solution.IndexOf(step) + 1 == solution.Count)
-                        {
-                            progressBar1.Value = 100;
-                            myLabel.Text = "Successfully solved!!";
-                            myLabel.ForeColor = Color.Green;
-                            button2.Enabled = true;
-                        }
-                        System.Threading.Thread.Sleep(1500);
-                        Application.DoEvents();
-
                     }
+                    progressBar1.Value += (int)barLevelIncrement;
+                    if (solution.IndexOf(step) + 1 == solution.Count)
+                    {
+                        progressBar1.Value = 100;
+                        myLabel.Text = "Successfully solved!!";
+                        myLabel.ForeColor = Color.Green;
+                        button2.Enabled = true;
+                    }
+                    System.Threading.Thread.Sleep(1500);
+                    Application.DoEvents();
+
                 }
-                else
-                {
-                    MessageBox.Show("Puzzle is not solvable");
-                    button2.Enabled = true;
-                }
+
             }
 
 
@@ -158,13 +152,13 @@ namespace Solving_n_puzzle_using_A_star
             List<int> linearList = new List<int>();
             if (e.KeyData == Keys.Enter)
             {
-                
+
                 GetState(textBox1, ref initialState);
                 GetLenght();
 
-                if (Math.Sqrt(lenght)%1 == 0)
+                if (Math.Sqrt(lenght) % 1 == 0)
                 {
-                    for(int i = 0; i<Math.Sqrt(lenght); i++)
+                    for (int i = 0; i < Math.Sqrt(lenght); i++)
                     {
                         for (int j = 0; j < Math.Sqrt(lenght); j++)
                         {
@@ -172,20 +166,20 @@ namespace Solving_n_puzzle_using_A_star
                             {
                                 linearList.Add(initialState[i, j]);
                             }
-                            catch(NullReferenceException)
+                            catch (NullReferenceException)
                             {
                                 MessageBox.Show("Initial puzzle state can't be null!!");
                                 isNull = true;
                                 break;
-                            }                        
-                            
+                            }
+
                         }
                     }
-                    while(linearList.Count != 0)
+                    while (linearList.Count != 0)
                     {
                         int first = linearList[0];
                         linearList.RemoveAt(0);
-                        for(int j = 0; j < linearList.Count; j++)
+                        for (int j = 0; j < linearList.Count; j++)
                         {
                             if (linearList[j] == first)
                             {
@@ -193,13 +187,13 @@ namespace Solving_n_puzzle_using_A_star
                                 isThereSame = true;
                                 break;
                             }
-                            if(first >= lenght)
+                            if (first >= lenght)
                             {
                                 MessageBox.Show("Values can't be equal or bigger than lenght!!");
                                 isBiggerThanLenght = true;
                                 break;
                             }
-                           
+
                         }
                         if (isThereSame)
                         {
@@ -223,7 +217,7 @@ namespace Solving_n_puzzle_using_A_star
                 }
 
             }
-            
+
         }
 
         private void goalState_KeyDown(object sender, KeyEventArgs e)
@@ -301,7 +295,7 @@ namespace Solving_n_puzzle_using_A_star
                 {
                     MessageBox.Show("Puzzle sizes are not matching!!");
                 }
-                
+
             }
         }
 
@@ -326,7 +320,7 @@ namespace Solving_n_puzzle_using_A_star
 
             }
         }
- 
+
         private void GetLenght()
         {
             string[] s = textBox1.Text.Split("-");
@@ -340,7 +334,7 @@ namespace Solving_n_puzzle_using_A_star
             progressBar1.Value = 0;
             textBox1.Enabled = true;
             this.Controls.Remove(myLabel);
-            
+
         }
     }
 }
